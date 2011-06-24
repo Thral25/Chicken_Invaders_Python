@@ -4,16 +4,6 @@ base=["sight.png","moonsmall.jpg"]
 big_chick=["ship1.png","ship11.png"]
 mid_chick=["ship2.png","ship22.png"]
 small_chick=["ship3.png","ship33.png"]
-class Timer(threading.Thread):
-	def __init__(self, seconds):
-		self.runTime = seconds
-		self.flag=True
-		threading.Thread.__init__(self)
-		
-	def run(self):
-		time.sleep(self.runTime)
-		self.flag=False
-			
 class Animation:
 	def __init__(self,x,y,pictures):
 		self.x=x
@@ -25,13 +15,14 @@ class Animation:
 		self.vx=0
 		self.vy=0
 		self.size=[]
+		self.ttl=0
 		
 	def update(self):
 		ms=self.clock.tick()
 		sec=ms/1000.
 		pic=pygame.image.load(self.picture).convert_alpha()
-		sec=self.clock.tick()/1000.
-		speed=1000*sec
+		self.ttl+=sec
+		speed=120*sec
 		self.size=[pic.get_width(),pic.get_height()]
 		if(self.vx==0)or(self.vy==0):
 			self.vx=speed
@@ -52,6 +43,7 @@ class Animation:
 			self.vy=math.fabs(self.vy)
 		self.x+=self.vx
 		self.y+=self.vy	
+		
 class Game(Animation): 
 	pygame.init()
 	score=0
@@ -67,10 +59,8 @@ class Game(Animation):
 	curtime=int(time.time())%100
 	runtime=0
 	font_score = pygame.font.Font(None,25)
-	font_end = pygame.font.Font(None,40)
-	t = Timer(60)
-	t.start()		
-	while t.flag:
+	font_end = pygame.font.Font(None,40)	
+	while duck_a.ttl<60:
 		for event in pygame.event.get():
 			if event.type==QUIT:
 				pygame.quit()
@@ -142,7 +132,7 @@ class Game(Animation):
 		x-= mouse.get_width()/2
 		y-=mouse.get_height()/2
 		screen.blit(mouse,(x,y))	
-		if(t.flag==False):
+		if(duck_a.ttl>60):
 			end = font_end.render("Game Over", 1, (5, 5, 5))
 			screen.blit(score_text,(735,45))	
 			screen.blit(end,(300,200))
