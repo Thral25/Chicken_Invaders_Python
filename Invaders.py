@@ -1,59 +1,27 @@
-import pygame, sys, random, math,threading,time
+import pygame, sys, random, math,time
+import Animation as anim
 from pygame.locals import *
 base=["sight.png","moonsmall.jpg"]
+meat=["eatme.png"]
 big_chick=["ship1.png","ship11.png"]
 mid_chick=["ship2.png","ship22.png"]
 small_chick=["ship3.png","ship33.png"]
-class Animation:
-	def __init__(self,x,y,pictures):
-		self.x=x
-		self.y=y
-		self.time=0
-		self.pictures=pictures
-		self.picture=pictures[0]
-		self.clock=pygame.time.Clock()
-		self.vx=0
-		self.vy=0
-		self.size=[]
-		self.ttl=0
-		
-	def update(self):
-		ms=self.clock.tick()
-		sec=ms/1000.
-		pic=pygame.image.load(self.picture).convert_alpha()
-		self.ttl+=sec
-		speed=120*sec
-		self.size=[pic.get_width(),pic.get_height()]
-		if(self.vx==0)or(self.vy==0):
-			self.vx=speed
-			self.vy=speed
-		if (sec != self.time)and(self.picture !=self.pictures[1]) :
-			self.time=sec
-			self.picture=self.pictures[1]
-		elif (sec != self.time)and(self.picture !=self.pictures[0]):
-			self.time=sec
-			self.picture=self.pictures[0]
-		if self.x+self.size[0]>800:
-			self.vx=-math.fabs(self.vx)
-		elif self.y+self.size[1]>600:
-			self.vy=-math.fabs(self.vy)
-		elif self.x<0:
-			self.vx=math.fabs(self.vx)
-		elif self.y<0:
-			self.vy=math.fabs(self.vy)
-		self.x+=self.vx
-		self.y+=self.vy	
-		
-class Game(Animation): 
+class Game: 
 	pygame.init()
 	score=0
 	screen=pygame.display.set_mode((800,600),0,32)
 	bg=pygame.image.load(base[1])
 	screen.blit(bg,(0,0))
 	mouse=pygame.image.load(base[0])
-	duck_a=Animation(10,50,big_chick)
-	duck_b=Animation(170,250,mid_chick)
-	duck_c=Animation(75,400,small_chick)
+	duck_a=anim.Animation(10,50,big_chick)
+	duck_b=anim.Animation(170,250,mid_chick)
+	duck_c=anim.Animation(75,400,small_chick)
+	food_a=anim.Animation(0,0,meat)
+	food_pic_a=pygame.image.load(food_a.picture).convert_alpha()
+	food_b=anim.Animation(0,0,meat)
+	food_pic_b=pygame.image.load(food_b.picture).convert_alpha()
+	food_c=anim.Animation(0,0,meat)
+	food_pic_c=pygame.image.load(food_c.picture).convert_alpha()
 	pygame.mouse.set_visible(0)
 	speed=3
 	curtime=int(time.time())%100
@@ -77,20 +45,20 @@ class Game(Animation):
 		screen.blit(pic2,(duck_b.x,duck_b.y))
 		screen.blit(pic3,(duck_c.x,duck_c.y))
 		if(score>200)and(score<400)and(speed==3):
-			duck_a.vx=duck_a.vx*1.5
-			duck_a.vy=duck_a.vy*1.5
-			duck_b.vx=duck_b.vx*1.5
-			duck_b.vy=duck_b.vy*1.5
-			duck_c.vx=duck_c.vx*1.5
-			duck_c.vy=duck_c.vy*1.5
+			duck_a.vx=duck_a.vx*1.4
+			duck_a.vy=duck_a.vy*1.4
+			duck_b.vx=duck_b.vx*1.4
+			duck_b.vy=duck_b.vy*1.4
+			duck_c.vx=duck_c.vx*1.4
+			duck_c.vy=duck_c.vy*1.4
 			speed=speed-1
 		elif(score>400)and(score<700)and(speed==2):
-			duck_a.vx=duck_a.vx*1.7
-			duck_a.vy=duck_a.vy*1.7
-			duck_b.vx=duck_b.vx*1.7
-			duck_b.vy=duck_b.vy*1.7
-			duck_c.vx=duck_c.vx*1.7
-			duck_c.vy=duck_c.vy*1.7
+			duck_a.vx=duck_a.vx*1.6
+			duck_a.vy=duck_a.vy*1.6
+			duck_b.vx=duck_b.vx*1.6
+			duck_b.vy=duck_b.vy*1.6
+			duck_c.vx=duck_c.vx*1.6
+			duck_c.vy=duck_c.vy*1.6
 			speed=speed-1
 		elif(score>700)and(speed==1):
 			duck_a.vx=duck_a.vx*2
@@ -100,25 +68,47 @@ class Game(Animation):
 			duck_c.vx=duck_c.vx*2
 			duck_c.vy=duck_c.vy*2
 			speed=0
-		duck_a.update()
-		duck_b.update()
-		duck_c.update()
+		duck_a.update(True)
+		duck_b.update(True)
+		duck_c.update(True)
 		x,y=pygame.mouse.get_pos()
 		x-= mouse.get_width()/2
 		y-=mouse.get_height()/2
 		screen.blit(mouse,(x,y))
-		if (x>=duck_a.x) and(x<duck_a.x+duck_a.size[0])and(y>=duck_a.y)and(y<duck_a.y+duck_a.size[1])and(True in pygame.mouse.get_pressed()):
+		colide=anim.Animation.colision(duck_a,duck_b,duck_c,x,y)
+		if(colide=="big"):
 			score=score+2
-			duck_a.x=random.randint(50,750)
-			duck_a.y=random.randint(50,550)
-		if (x>=duck_b.x) and(x<duck_b.x+duck_b.size[0])and(y>=duck_b.y)and(y<duck_b.y+duck_b.size[1])and(True in pygame.mouse.get_pressed()):
+			food_a.x=x
+			food_a.y=y
+			food_a.update(False)
+		elif(colide=="med"):
 			score=score+10
-			duck_b.x=random.randint(50,750)
-			duck_b.y=random.randint(50,550)
-		if (x>=duck_c.x) and(x<duck_c.x+duck_c.size[0])and(y>=duck_c.y)and(y<duck_c.y+duck_c.size[1])and(True in pygame.mouse.get_pressed()):
+			food_b.x=x
+			food_b.y=y
+			food_b.update(False)
+		elif(colide=="small"):
 			score=score+30
-			duck_c.x=random.randint(50,750)
-			duck_c.y=random.randint(50,550)	
+			food_c.x=x
+			food_c.y=y
+			food_c.update(False)
+		if food_a.ttl==True:
+			if food_a.y<600:	
+				food_a.update(False)
+				screen.blit(food_pic_a,(food_a.x,food_a.y))
+			else:
+				food_a.ttl=False
+		if food_b.ttl==True:
+			if food_b.y<600:	
+				food_b.update(False)
+				screen.blit(food_pic_b,(food_b.x,food_b.y))
+			else:
+				food_b.ttl=False
+		if food_c.ttl==True:
+			if food_c.y<600:	
+				food_c.update(False)
+				screen.blit(food_pic_c,(food_c.x,food_c.y))
+			else:
+				food_c.ttl=False		
 		score_text = font_score.render(str(score), 1, (10, 10, 10))
 		screen.blit(score_text,(735,45))	
 		pygame.display.update()
@@ -137,4 +127,4 @@ class Game(Animation):
 			screen.blit(score_text,(735,45))	
 			screen.blit(end,(300,200))
 			pygame.display.update()
-		
+	
