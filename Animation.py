@@ -49,6 +49,11 @@ class Animation:
 			if self.y>600:
 				self.vy=0
 		
+	def setfood(self,x,y):
+		self.x=x
+		self.y=y
+		self.ttl=True	
+		
 	def colision(duck_a,duck_b,duck_c,x,y):
 		if (x>=duck_a.x) and(x<duck_a.x+duck_a.size[0])and(y>=duck_a.y)and(y<duck_a.y+duck_a.size[1])and(True in pygame.mouse.get_pressed()):
 			duck_a.x=random.randint(50,750)
