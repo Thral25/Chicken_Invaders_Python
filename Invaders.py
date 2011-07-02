@@ -16,6 +16,7 @@ class Game:
 			pic=pygame.image.load(duck.picture).convert_alpha()
 			screen.blit(pic,(duck.x,duck.y))
 			duck.update(True)
+
 	pygame.init()
 	score=0
 	screen=pygame.display.set_mode((800,600),0,32)
@@ -84,4 +85,3 @@ class Game:
 			screen.blit(score_text,(735,45))	
 			screen.blit(end,(300,200))
 			pygame.display.update()
-	

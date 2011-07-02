@@ -61,4 +61,4 @@ class Animation:
 				duck.x=random.randint(50,750)
 				duck.y=random.randint(50,550)
 				return key
-		
+		return "missed"
