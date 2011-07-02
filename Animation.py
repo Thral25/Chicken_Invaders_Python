@@ -44,7 +44,7 @@ class Animation:
 			self.y+=self.vy
 		else:
 			self.vx=0
-			self.vy=math.fabs(speed)
+			self.vy=math.fabs(speed) + 2
 			self.y+=self.vy
 			if self.y>600:
 				self.vy=0
@@ -55,15 +55,10 @@ class Animation:
 		self.ttl=True	
 		
 	def colision(duck_a,duck_b,duck_c,x,y):
-		if (x>=duck_a.x) and(x<duck_a.x+duck_a.size[0])and(y>=duck_a.y)and(y<duck_a.y+duck_a.size[1])and(True in pygame.mouse.get_pressed()):
-			duck_a.x=random.randint(50,750)
-			duck_a.y=random.randint(50,550)
-			return "big"
-		if (x>=duck_b.x) and(x<duck_b.x+duck_b.size[0])and(y>=duck_b.y)and(y<duck_b.y+duck_b.size[1])and(True in pygame.mouse.get_pressed()):
-			duck_b.x=random.randint(50,750)
-			duck_b.y=random.randint(50,550)
-			return "med"
-		if (x>=duck_c.x) and(x<duck_c.x+duck_c.size[0])and(y>=duck_c.y)and(y<duck_c.y+duck_c.size[1])and(True in pygame.mouse.get_pressed()):
-			duck_c.x=random.randint(50,750)
-			duck_c.y=random.randint(50,550)
-			return "small"
+		ducks={'big':duck_a,'med':duck_b,'small':duck_c}
+		for key ,duck in ducks.iteritems():
+			if (x>=duck.x) and(x<duck.x+duck.size[0])and(y>=duck.y)and(y<duck.y+duck.size[1])and(True in pygame.mouse.get_pressed()):
+				duck.x=random.randint(50,750)
+				duck.y=random.randint(50,550)
+				return key
+		
