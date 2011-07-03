@@ -80,8 +80,15 @@ class Game:
 		x-= mouse.get_width()/2
 		y-=mouse.get_height()/2
 		screen.blit(mouse,(x,y))	
-		if(ducks[0].ttl>60):
-			end = font_end.render("Game Over", 1, (5, 5, 5))
+		if((ducks[0].ttl>60)and(score<200)):
+			end = font_end.render("Game Over LOOSER", 1, (5, 5, 5))
 			screen.blit(score_text,(735,45))	
 			screen.blit(end,(300,200))
+			pygame.display.update()
+		elif((ducks[0].ttl>60)and(score>200)):
+			end = font_end.render("Game Over ", 1, (5, 5, 5))
+			screen.blit(score_text,(735,45))	
+			screen.blit(end,(300,200))
+			end = font_end.render(" You Fed The world with Alien Ducks", 1, (5, 5, 5))
+			screen.blit(end,(280,250))
 			pygame.display.update()
