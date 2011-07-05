@@ -5,6 +5,14 @@ big_chick=["ship1.png","ship11.png"]
 mid_chick=["ship2.png","ship22.png"]
 small_chick=["ship3.png","ship33.png"]
 class InvadersTest(unittest.TestCase):
+	def test_init(self):
+		duck=anim.Animation(50,60,big_chick)	
+		self.assertEqual(duck.x,50)
+		self.assertEqual(duck.y,60)
+		self.assertEqual(duck.vx,0)
+		self.assertEqual(duck.vy,0)
+		self.assertNotEqual(len(duck.pictures),0)
+		
 	def test_setfood_setup_check(self):		
 		food=anim.Animation(5,5,meat)
 		food.setfood(15,20)
@@ -13,7 +21,7 @@ class InvadersTest(unittest.TestCase):
 		self.assertTrue(food.y,20)
 		self.assertTrue(food.ttl,True)
 				
-	def update_duck_test(self):
+	def test_update_duck_test(self):
 		pygame.init()
 		duck_big=anim.Animation(50,60,big_chick)
 		duck_med=anim.Animation(100,200,mid_chick)
@@ -25,7 +33,7 @@ class InvadersTest(unittest.TestCase):
 		self.assertNotEqual(duck_big.vy,0)
 		self.assertNotEqual(len(duck_big.size),0)
 		
-	def update_food_test(self):	
+	def test_update_food_test(self):	
 		pygame.init()
 		food=anim.Animation(5,5,meat)
 		food.setfood(15,20)
@@ -35,7 +43,7 @@ class InvadersTest(unittest.TestCase):
 		self.assertEqual(food.vx,0)
 		self.assertNotEqual(food.vy,0)
 		
-	def collision_when_mouse_pressed(self):
+	def test_collision_when_mouse_isnt_pressed(self):
 		pygame.init()
 		duck_big=anim.Animation(50,60,big_chick)
 		duck_med=anim.Animation(100,200,mid_chick)
@@ -48,6 +56,8 @@ class InvadersTest(unittest.TestCase):
 		self.assertNotEqual(result,"big")
 		self.assertNotEqual(result,"med")
 		self.assertNotEqual(result,"small")		
-		
+		self.assertTrue(result,"missed")
+	
+	
 if __name__ == '__main__':
     unittest.main()	

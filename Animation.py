@@ -56,9 +56,9 @@ class Animation:
 		
 	def colision(duck_a,duck_b,duck_c,x,y):
 		ducks={'big':duck_a,'med':duck_b,'small':duck_c}
-		for key ,duck in ducks.iteritems():
-			if (x>=duck.x) and(x<duck.x+duck.size[0])and(y>=duck.y)and(y<duck.y+duck.size[1])and(True in pygame.mouse.get_pressed()):
-				duck.x=random.randint(50,750)
-				duck.y=random.randint(50,550)
+		for key  in ducks:
+			if (x>=ducks[key].x) and(x<ducks[key].x+ducks[key].size[0])and(y>=ducks[key].y)and(y<ducks[key].y+ducks[key].size[1])and(True in pygame.mouse.get_pressed()):
+				ducks[key].x=random.randint(50,750)
+				ducks[key].y=random.randint(50,550)
 				return key
 		return "missed"
